@@ -1,16 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Title</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="style/style.css">
-    </head>
-    <body>
-        <div class="container home-page">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Store Locator</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    <div class="main_container">
+        <div class="store_locator">
+            <h1>Store Locator</h1>
         </div>
-        <script src="js/index.js" async defer></script>
-    </body>
+        <div class="search_container">
+            <div class="search_bar">
+                <input type="text" name="" id="" placeholder="Enter zip">
+                <i class="fas fa-search search-button"></i>
+            </div>
+
+            <div class="search_results">
+                <div class="address_details">
+                    <div class="details">7438 South Ave. <br />
+                        Norman, OK 73072</div>
+                    <div class="contact"><i class="fas fa-phone-alt"></i> (950)-715-9938</div>
+                </div>
+                <div class="address_serial">
+                    1
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="map"></div>
+    <script>
+        require("dotenv").config();
+        let map;
+
+        function initMap() {
+            let location = {
+                lat: 34.063380,
+                lng: -118.358080
+            };
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: location,
+                zoom: 8,
+            });
+        }
+    </script>
+<script></script>
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=APIKey&callback=initMap&libraries=&v=weekly"
+        async defer></script>
+
+    <script src="js/index.js" async defer></script>
+</body>
+
 </html>
