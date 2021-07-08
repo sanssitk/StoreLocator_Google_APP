@@ -16,7 +16,7 @@ body {
 
 #map {
     height: 100vh;
-    z-index: -100;
+    /* z-index: -100; */
 }
 
 .store_locator h1 {
