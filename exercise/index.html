@@ -12,38 +12,28 @@
 </head>
 
 <body>
-
-
     <div id="map"></div>
     <div class="main_container">
-        <div class="store_locator">
-            <h1>Store Locator</h1>
-        </div>
         <div class="search_container">
+            <h1>Store Locator</h1>
             <div class="search_bar">
-                <input type="text" name="" id="" placeholder="Enter zip">
-                <i class="fas fa-search search-button"></i>
+                <input type="text" id="zip-code" placeholder="Enter zip" onkeyup="onEnter(event)">
+                <i class="fas fa-search search-button" onclick="getStores()"></i>
             </div>
 
-            <div class="search_results">
-                <div class="address_details">
-                    <div class="details">7438 South Ave. <br />
-                        Norman, OK 73072</div>
-                    <div class="contact"><i class="fas fa-phone-alt"></i> (950)-715-9938</div>
-                </div>
-                <div class="address_serial">
-                    1
+            <div class="stores-list-container">
+                <div class="find-stores-list">
+                    Find stores near you!!
                 </div>
             </div>
-
         </div>
 
     </div>
 
-    <script src="./js/index.js"></script>
+    <script src="/js/index.js"></script>
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script
-        async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAH5TaqIxtupX2c4apBcVMM7ENZSdVxInY&callback=initMap&libraries=&v=weekly">
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=<YOUR_API_KEY>&callback=initMap&libraries=&v=weekly">
     </script>
 
 </body>

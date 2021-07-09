@@ -1,29 +1,68 @@
-var map;
-var infowindow;
-
-function initMap() {
+var map, infowindow;
+var markers = [];
+const API_URL = "http://localhost:3000/api/stores";
+initMap = () => {
     map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 7,
         center: {
-            lat: -118.358080,
-            lng: 34.063380
+            lat: 34.063584,
+            lng: -118.376354,
         },
+        zoom: 10,
     });
     infowindow = new google.maps.InfoWindow();
-    getStores();
+}
+
+const onEnter = (e) => {
+    if (e.key == "Enter") {
+        clearLocations();
+        getStores();
+    }
 }
 
 const getStores = () => {
-    const API_URL = "http://localhost:3000/api/stores";
-    fetch(API_URL)
-        .then(res => {
-            if (res.status === 200) {
-                return res.json()
+    const zipCode = document.getElementById('zip-code').value;
+    if (!zipCode) return;
+    const fullUrl = `${API_URL}?zip_code=${zipCode}`;
+    fetch(fullUrl)
+        .then((response) => {
+            if (response.status == 200) {
+                return response.json();
             } else {
-                throw new Error(res.status)
+                throw new Error(response.status);
+            }
+        }).then((data) => {
+            if (data.length > 0) {
+                clearLocations();
+                setStoresList(data);
+                searchLocationsNear(data);
+                setOnClickListener();
+            } else {
+                clearLocations();
+                noStoresFound()
             }
         })
-        .then(stores => searchLocationsNear(stores));
+}
+
+const setStoresList = (stores) => {
+    let storesHtml = '';
+    stores.map((store, index) => {
+        storesHtml += `
+            <div class="stores-list">
+                <div class="store-list-box">
+                     <div class="store-info-container">
+                            <div class="address-line1">${store["addressLines"][0]}</div>
+                            <div class="address-line2">${store["addressLines"][1]}</div>
+                            <div class="phone">
+                                <i class="fas fa-phone-alt icon"></i>
+                                <span>${store["phoneNumber"]}</span>
+                            </div>
+                        </div>
+                    <div class="store-info-number">${index+1}</div>
+                </div>
+            </div>
+        `
+    })
+    document.querySelector('.stores-list-container').innerHTML = storesHtml;
 }
 
 const searchLocationsNear = (stores) => {
@@ -42,15 +81,48 @@ const searchLocationsNear = (stores) => {
     map.fitBounds(bounds);
 }
 
+const clearLocations = () => {
+    infowindow.close();
+    for (var i = 0; i < markers.length; i++) {
+        markers[1].setMap(null);
+    }
+    markers.length = 0;
+}
+
+const noStoresFound = () => {
+    const message = `
+        <div class="find-stores-list">
+            <strong style="color: red">Address NOT FOUND! TRY AGAIN</strong>
+        </div>`
+
+    document.querySelector(".stores-list-container").innerHTML = message;
+}
+
+function setOnClickListener() {
+    var storeElements = document.querySelectorAll('.stores-list');
+    storeElements.forEach((elem, index) => {
+        elem.addEventListener('click', function () {
+            new google.maps.event.trigger(markers[index], 'click');
+        })
+    })
+}
+
+
 const createMarker = (myLatLng, name, address, openStatusText, phone, storeNumber) => {
     let html = `
     <div class="store-info-window">
         <div class="store-info-name">${name}</div>
         <div class="store-info-status">${openStatusText}</div>
         <div class="store-info-address">
+        <i class="fas fa-location-arrow icon"></i>
             <span>${address}</span>
         </div>
-        <div class="store-info-phone">${phone}</div>
+        <div class="store-info-phone">
+            <a href="tel: ${phone}">
+                <i class="fas fa-phone-alt icon"></i>
+                <span>${phone}</span>
+            </a>            
+        </div>
     </div>
     `
     var marker = new google.maps.Marker({
@@ -63,4 +135,5 @@ const createMarker = (myLatLng, name, address, openStatusText, phone, storeNumbe
         infowindow.setContent(html);
         infowindow.open(map, marker);
     })
+    markers.push(marker)
 }
